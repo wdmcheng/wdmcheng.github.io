@@ -2,13 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://www.wdmcheng.cn/.well-known/microsoft-identity-association.json</loc>
-    
-    <lastmod>2022-09-07T10:00:16.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://www.wdmcheng.cn/Curator-%E7%AE%A1%E7%90%86%E4%BD%A0%E7%9A%84Elasticsearch%E7%B4%A2%E5%BC%95/</loc>
     
     <lastmod>2019-05-27T07:21:11.000Z</lastmod>
@@ -23,13 +16,6 @@
   </url>
   
   <url>
-    <loc>https://www.wdmcheng.cn/%E8%AE%B0%E5%BD%95%E4%B8%80%E4%B8%8B%E6%9C%AC%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E8%BF%87%E7%A8%8B/</loc>
-    
-    <lastmod>2019-05-26T16:12:45.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://www.wdmcheng.cn/macOS%E8%B0%83%E6%95%B4Launchpad%E5%9B%BE%E6%A0%87%E5%A4%A7%E5%B0%8F/</loc>
     
     <lastmod>2019-05-26T16:12:45.000Z</lastmod>
@@ -37,7 +23,14 @@
   </url>
   
   <url>
-    <loc>https://www.wdmcheng.cn/top/index.html</loc>
+    <loc>https://www.wdmcheng.cn/%E8%AE%B0%E5%BD%95%E4%B8%80%E4%B8%8B%E6%9C%AC%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E8%BF%87%E7%A8%8B/</loc>
+    
+    <lastmod>2019-05-26T16:12:45.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.wdmcheng.cn/404/index.html</loc>
     
     <lastmod>2019-04-02T02:59:17.000Z</lastmod>
     
@@ -72,7 +65,7 @@
   </url>
   
   <url>
-    <loc>https://www.wdmcheng.cn/404/index.html</loc>
+    <loc>https://www.wdmcheng.cn/top/index.html</loc>
     
     <lastmod>2019-04-02T02:59:17.000Z</lastmod>
     
