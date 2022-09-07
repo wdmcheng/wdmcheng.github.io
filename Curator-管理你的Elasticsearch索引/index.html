@@ -1,0 +1,373 @@
+<!DOCTYPE html><html class="theme-next gemini use-motion" lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#222"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.min.css"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="google-site-verification" content="lIvVe-dWSgK0DqmtiD_EGQIOEToYJN4JRgcnMobFBZo"><meta name="msvalidate.01" content="B94E796A28E4E527BF11B7D41F0BD62C"><meta name="baidu-site-verification" content="uEL01GcE1h"><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="//fonts.lug.ustc.edu.cn/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css"><link rel="stylesheet" href="/css/main.css?v=7.1.1"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1"><link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222"><script id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Gemini",version:"7.1.1",sidebar:{position:"left",display:"post",offset:12,onmobile:!1,dimmer:!1},back2top:!0,back2top_sidebar:!0,fancybox:!0,fastclick:!0,lazyload:!0,tabs:!0,motion:{enable:!0,async:!0,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle=window.adsbygoogle||[]).push({google_ad_client:"ca-pub-6923016589675745",enable_page_level_ads:!0})</script><script>!function(e,t,o,c,i,a,n){e.DaoVoiceObject=i,e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},e[i].l=1*new Date,a=t.createElement(o),n=t.getElementsByTagName(o)[0],a.async=1,a.src=c,a.charset="utf-8",n.parentNode.insertBefore(a,n)}(window,document,"script",("https:"==document.location.protocol?"https:":"http:")+"//widget.daovoice.io/widget/2000d974.js","daovoice"),daovoice("init",{app_id:"2000d974"}),daovoice("update")</script><meta name="description" content="当你需要定期删除或者关闭ES的索引时怎么办？自己写个程序或者脚本，调用API吗？不需要的，Curator可以帮你做到。官方出品哦。"><meta name="keywords" content="elastic,elasticsearch,es,curator,python,python3,pip,crontab"><meta property="og:type" content="article"><meta property="og:title" content="Curator-管理你的Elasticsearch索引"><meta property="og:url" content="https://www.wdmcheng.cn/Curator-管理你的Elasticsearch索引/index.html"><meta property="og:site_name" content="Wdmcheng"><meta property="og:description" content="当你需要定期删除或者关闭ES的索引时怎么办？自己写个程序或者脚本，调用API吗？不需要的，Curator可以帮你做到。官方出品哦。"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://www.wdmcheng.cn/Curator-管理你的Elasticsearch索引/OpenSSL.png"><meta property="og:updated_time" content="2019-05-27T07:21:11.000Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Curator-管理你的Elasticsearch索引"><meta name="twitter:description" content="当你需要定期删除或者关闭ES的索引时怎么办？自己写个程序或者脚本，调用API吗？不需要的，Curator可以帮你做到。官方出品哦。"><meta name="twitter:image" content="https://www.wdmcheng.cn/Curator-管理你的Elasticsearch索引/OpenSSL.png"><link rel="alternate" href="/atom.xml" title="Wdmcheng" type="application/atom+xml"><link rel="canonical" href="https://www.wdmcheng.cn/Curator-管理你的Elasticsearch索引/"><script id="page.configurations">CONFIG.page={sidebar:""}</script><title>Curator-管理你的Elasticsearch索引 | Wdmcheng</title><script async src="https://www.googletagmanager.com/gtag/js?id=UA-136949119-1"></script><script>var host=window.location.hostname;if("localhost"!==host){function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-136949119-1")}</script><script>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?89e01f6f76a49ecdafe40cfeef5e52c8";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script><noscript><style>.sidebar-inner,.use-motion .brand,.use-motion .collection-title,.use-motion .comments,.use-motion .menu-item,.use-motion .motion-element,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .logo,.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.use-motion .logo-line-before i{left:initial}.use-motion .logo-line-after i{right:initial}</style></noscript></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Wdmcheng</span><span class="logo-line-after"><i></i></span></a></div><h1 class="site-subtitle" itemprop="description">Java Coder</h1></div><div class="site-nav-toggle"> <button aria-label="切换导航栏"><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签<span class="badge">16</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br>分类<span class="badge">0</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档<span class="badge">4</span></a></li><li class="menu-item menu-item-top"><a href="/top/" rel="section"><i class="menu-item-icon fa fa-fw fa-signal"></i><br>阅读热度</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br>搜索</a></li></ul><div class="site-search"><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class="search-icon"><i class="fa fa-search"></i></span><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span><div class="local-search-input-wrapper"> <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input"></div></div><div id="local-search-result"></div></div></div></nav></div></header> <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL3dkbWNoZW5n" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0 0 115 115 130 115 142 142 250 250 250 0Z"/><path d="M128.3 109C113.8 99.7 119 89.6 119 89.6 122 82.7 120.5 78.6 120.5 78.6 119.2 72 123.4 76.3 123.4 76.3 127.3 80.9 125.5 87.3 125.5 87.3 122.9 97.6 130.6 101.9 134.4 103.2" fill="currentColor" style="transform-origin:130px 106px" class="octo-arm"/><path d="M115 115C114.9 115.1 118.7 116.5 119.8 115.4L133.7 101.6C136.9 99.2 139.9 98.4 142.2 98.6 133.8 88 127.5 74.4 143.8 58 148.5 53.4 154 51.2 159.7 51 160.3 49.4 163.2 43.6 171.4 40.1 171.4 40.1 176.1 42.5 178.8 56.2 183.1 58.6 187.2 61.8 190.9 65.4 194.5 69 197.7 73.2 200.1 77.6 213.8 80.2 216.3 84.9 216.3 84.9 212.7 93.1 206.9 96 205.4 96.6 205.1 102.4 203 107.8 198.3 112.5 181.9 128.9 168.3 122.5 157.7 114.1 157.9 116.9 156.7 120.9 152.7 124.9L141 136.5C139.8 137.7 141.6 141.9 141.8 141.8Z" fill="currentColor" class="octo-body"/></svg></span><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><div class="reading-progress-bar"></div><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="https://www.wdmcheng.cn/Curator-管理你的Elasticsearch索引/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="雾都迷城"><meta itemprop="description" content="手握日月摘星晨，世间无我这般人……嗯……吹大了"><meta itemprop="image" content="/images/avatar.gif"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Wdmcheng"></span><header class="post-header"><h2 class="post-title" itemprop="name headline">Curator-管理你的Elasticsearch索引</h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建时间：2019-05-27 14:02:14 / 修改时间：15:21:11" itemprop="dateCreated datePublished" datetime="2019-05-27T14:02:14+08:00">2019-05-27</time></span> <span id="/Curator-管理你的Elasticsearch索引/" class="leancloud_visitors" data-flag-title="Curator-管理你的Elasticsearch索引"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span> <span class="post-meta-item-text">阅读次数：</span><span class="leancloud-visitors-count"></span></span><div class="post-symbolscount"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i></span> <span class="post-meta-item-text">本文字数：</span> <span title="本文字数">837</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i></span> <span class="post-meta-item-text">阅读时长 &asymp;</span> <span title="阅读时长">1 分钟</span></div><div class="post-description">当你需要定期删除或者关闭ES的索引时怎么办？自己写个程序或者脚本，调用API吗？不需要的，Curator可以帮你做到。官方出品哦。</div></div></header><div class="post-body" itemprop="articleBody"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ol><li>欢迎在文末留言，共同进步。</li><li> 本文采用<span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo" title="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名 - 非商业性使用 - 相同方式共享 4.0 国际<i class="fa fa-external-link"></i></span> (<span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8=" title="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0<i class="fa fa-external-link"></i></span>) 许可协议，转载请注明出处！</li></ol><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>我这里以 CentOS 7 为例来进行说明。</p><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>官方推荐最简单的安装方式就是使用 <code>pip</code>，没错，这货是 <code>python</code> 写的。</p><ol><li><p>最简化安装的 CentOS，虽然自带了 <code>python</code>，但是没有相关头文件，无法安装 <code>pip</code>，干脆编译安装 <code>python3</code>。既然要编译，先装个开发工具包再说</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y groupinstall <span class="string">'Development Tools'</span></span><br></pre></td></tr></table></figure></li><li><p>编译 <code>python3</code>，一定要注意 <code>OpenSSL</code> 支持是不是启用了，否则后面没办法下载各种包了，还需要这些依赖，不安装会报错的（都是试错过后的总结，都是眼泪😢）</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install openssl openssl-devel zlib zlib-devel libffi-devel</span><br></pre></td></tr></table></figure></li><li><p>下载 <code>python3</code> 的源码包，然后解压编译并执行 <code>configure</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载解压</span></span><br><span class="line">wget https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tar.xz</span><br><span class="line">tar -Jxf Python-3.7.3.tar.xz</span><br><span class="line"><span class="built_in">cd</span> Python-3.7.3/</span><br><span class="line"><span class="comment"># 执行配置</span></span><br><span class="line">./configure</span><br></pre></td></tr></table></figure></li><li><p>执行完 <code>configure</code> 后，注意看 <code>OpenSSL</code> 支持是不是启用了。如图是成功启用的。<br><img src="OpenSSL.png" alt="包含 OpenSSL 支持"></p></li><li><p>后面编译安装</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></li><li><p>这个时候没有 <code>pip</code> 命令，只有 <code>pip3</code>。不用别名处理了，顺手更新一下 <code>pip</code> 版本，也会自动安装 <code>pip</code> 这个命令</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install --upgrade pip</span><br></pre></td></tr></table></figure></li><li><p>进入正题，安装 <code>curator</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install elasticsearch-curator</span><br></pre></td></tr></table></figure></li></ol><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><ol><li><p>执行 <code>curator</code> 命令时，默认读取的配置文件在 <code>~/.curator/curator.yml</code>。创建配置文件，内容如下</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment"># Remember, leave a key empty if there is no value.  None will be a string,</span></span><br><span class="line"><span class="comment"># not a Python "NoneType"</span></span><br><span class="line"><span class="attr">client:</span></span><br><span class="line">  <span class="comment"># ES 节点列表</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="number">10.0</span><span class="number">.79</span><span class="number">.14</span></span><br><span class="line"><span class="bullet">    -</span> <span class="number">10.0</span><span class="number">.79</span><span class="number">.22</span></span><br><span class="line"><span class="bullet">    -</span> <span class="number">10.0</span><span class="number">.79</span><span class="number">.23</span></span><br><span class="line"><span class="bullet">    -</span> <span class="number">10.0</span><span class="number">.79</span><span class="number">.24</span></span><br><span class="line"><span class="attr">  port:</span> <span class="number">9200</span></span><br><span class="line"><span class="attr">  url_prefix:</span></span><br><span class="line"><span class="attr">  use_ssl:</span> <span class="literal">False</span></span><br><span class="line"><span class="attr">  certificate:</span></span><br><span class="line"><span class="attr">  client_cert:</span></span><br><span class="line"><span class="attr">  client_key:</span></span><br><span class="line"><span class="attr">  ssl_no_validate:</span> <span class="literal">False</span></span><br><span class="line"><span class="attr">  http_auth:</span> <span class="attr">username:password</span></span><br><span class="line"><span class="attr">  timeout:</span> <span class="number">30</span></span><br><span class="line"><span class="attr">  master_only:</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="attr">logging:</span></span><br><span class="line"><span class="attr">  loglevel:</span> <span class="string">INFO</span></span><br><span class="line">  <span class="comment"># logfile 文件路径，一定要保证文件的父级文件夹存在</span></span><br><span class="line"><span class="attr">  logfile:</span> <span class="string">/data/es-curator-log/es-curator.log</span></span><br><span class="line"><span class="attr">  logformat:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">  blacklist:</span> <span class="string">['elasticsearch',</span> <span class="string">'urllib3'</span><span class="string">]</span></span><br></pre></td></tr></table></figure><p>上面的 <code>http_auth</code> 部分，是用户名和密码，用 <code>:</code> 分隔。更多配置文件写法，参考 <span class="exturl" data-url="aHR0cHM6Ly93d3cuZWxhc3RpYy5jby9ndWlkZS9lbi9lbGFzdGljc2VhcmNoL2NsaWVudC9jdXJhdG9yL2N1cnJlbnQvY29uZmlnZmlsZS5odG1s" title="https://www.elastic.co/guide/en/elasticsearch/client/curator/current/configfile.html">官方文档<i class="fa fa-external-link"></i></span></p></li><li><p>创建任务文件，这里提供一个参考，内容如下。详细信息参考<span class="exturl" data-url="aHR0cHM6Ly93d3cuZWxhc3RpYy5jby9ndWlkZS9lbi9lbGFzdGljc2VhcmNoL2NsaWVudC9jdXJhdG9yL2N1cnJlbnQvYWN0aW9uZmlsZS5odG1s" title="https://www.elastic.co/guide/en/elasticsearch/client/curator/current/actionfile.html">官方文档<i class="fa fa-external-link"></i></span></p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="comment"># Remember, leave a key empty if there is no value.  None will be a string,</span></span><br><span class="line"><span class="comment"># not a Python "NoneType"</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Also remember that all examples have 'disable_action' set to True.  If you</span></span><br><span class="line"><span class="comment"># want to use this action as a template, be sure to set this to False after</span></span><br><span class="line"><span class="comment"># copying it.</span></span><br><span class="line"><span class="attr">actions:</span></span><br><span class="line">  <span class="number">1</span><span class="string">:</span></span><br><span class="line"><span class="attr">    action:</span> <span class="string">delete_indices</span></span><br><span class="line"><span class="attr">    description:</span> <span class="string">&gt;-</span></span><br><span class="line">      <span class="string">Delete</span> <span class="string">indices</span> <span class="string">older</span> <span class="string">than</span> <span class="number">31</span> <span class="string">days</span> <span class="string">(based</span> <span class="string">on</span> <span class="string">index</span> <span class="string">name),</span> <span class="string">for</span> <span class="bullet">-pro-</span> <span class="string">indices.</span></span><br><span class="line"></span><br><span class="line">      <span class="string">删除31天之前的</span> <span class="bullet">-pro-</span> <span class="string">索引</span></span><br><span class="line"><span class="attr">    options:</span></span><br><span class="line"><span class="attr">      ignore_empty_list:</span> <span class="literal">True</span></span><br><span class="line"><span class="attr">      timeout_override:</span> <span class="number">300</span></span><br><span class="line"><span class="attr">      continue_if_exception:</span> <span class="literal">True</span></span><br><span class="line"><span class="attr">      disable_action:</span> <span class="literal">False</span></span><br><span class="line"><span class="attr">    filters:</span></span><br><span class="line"><span class="attr">    - filtertype:</span> <span class="string">pattern</span></span><br><span class="line"><span class="attr">      kind:</span> <span class="string">regex</span></span><br><span class="line"><span class="attr">      value:</span> <span class="string">'.*-pro-.*'</span></span><br><span class="line"><span class="attr">      exclude:</span></span><br><span class="line"><span class="attr">    - filtertype:</span> <span class="string">age</span></span><br><span class="line"><span class="attr">      source:</span> <span class="string">name</span></span><br><span class="line"><span class="attr">      direction:</span> <span class="string">older</span></span><br><span class="line"><span class="attr">      timestring:</span> <span class="string">'%Y.%m.%d'</span></span><br><span class="line"><span class="attr">      unit:</span> <span class="string">days</span></span><br><span class="line"><span class="attr">      unit_count:</span> <span class="number">31</span></span><br><span class="line"><span class="attr">      exclude:</span></span><br><span class="line">  <span class="number">2</span><span class="string">:</span></span><br><span class="line"><span class="attr">    action:</span> <span class="string">delete_indices</span></span><br><span class="line"><span class="attr">    description:</span> <span class="string">&gt;-</span></span><br><span class="line">      <span class="string">Delete</span> <span class="string">indices</span> <span class="string">older</span> <span class="string">than</span> <span class="number">7</span> <span class="string">days</span> <span class="string">(based</span> <span class="string">on</span> <span class="string">index</span> <span class="string">name),</span> <span class="string">except</span> <span class="bullet">-pro-</span> <span class="string">indices.</span></span><br><span class="line"></span><br><span class="line">      <span class="string">删除7天之前的非</span> <span class="bullet">-pro-</span> <span class="string">索引</span></span><br><span class="line"><span class="attr">    options:</span></span><br><span class="line"><span class="attr">      ignore_empty_list:</span> <span class="literal">True</span></span><br><span class="line"><span class="attr">      timeout_override:</span> <span class="number">300</span></span><br><span class="line"><span class="attr">      continue_if_exception:</span> <span class="literal">True</span></span><br><span class="line"><span class="attr">      disable_action:</span> <span class="literal">False</span></span><br><span class="line"><span class="attr">    filters:</span></span><br><span class="line"><span class="attr">    - filtertype:</span> <span class="string">pattern</span></span><br><span class="line"><span class="attr">      kind:</span> <span class="string">regex</span></span><br><span class="line"><span class="attr">      value:</span> <span class="string">'.*-pro-.*'</span></span><br><span class="line"><span class="attr">      exclude:</span> <span class="literal">True</span></span><br><span class="line"><span class="attr">    - filtertype:</span> <span class="string">age</span></span><br><span class="line"><span class="attr">      source:</span> <span class="string">name</span></span><br><span class="line"><span class="attr">      direction:</span> <span class="string">older</span></span><br><span class="line"><span class="attr">      timestring:</span> <span class="string">'%Y.%m.%d'</span></span><br><span class="line"><span class="attr">      unit:</span> <span class="string">days</span></span><br><span class="line"><span class="attr">      unit_count:</span> <span class="number">7</span></span><br><span class="line"><span class="attr">      exclude:</span></span><br><span class="line">  <span class="number">3</span><span class="string">:</span></span><br><span class="line"><span class="attr">    action:</span> <span class="string">delete_indices</span></span><br><span class="line"><span class="attr">    description:</span> <span class="string">&gt;-</span></span><br><span class="line">      <span class="string">Delete</span> <span class="string">indices</span> <span class="string">older</span> <span class="string">than</span> <span class="number">3</span> <span class="string">days</span> <span class="string">(based</span> <span class="string">on</span> <span class="string">index</span> <span class="string">name),</span> <span class="string">for</span> <span class="string">system</span> <span class="string">indices.</span></span><br><span class="line"></span><br><span class="line">      <span class="string">删除3天之前的系统索引</span></span><br><span class="line"><span class="attr">    options:</span></span><br><span class="line"><span class="attr">      ignore_empty_list:</span> <span class="literal">True</span></span><br><span class="line"><span class="attr">      timeout_override:</span> <span class="number">300</span></span><br><span class="line"><span class="attr">      continue_if_exception:</span> <span class="literal">True</span></span><br><span class="line"><span class="attr">      disable_action:</span> <span class="literal">False</span></span><br><span class="line"><span class="attr">    filters:</span></span><br><span class="line"><span class="attr">    - filtertype:</span> <span class="string">pattern</span></span><br><span class="line"><span class="attr">      kind:</span> <span class="string">regex</span></span><br><span class="line"><span class="attr">      value:</span> <span class="string">'^\..*-.*'</span></span><br><span class="line"><span class="attr">      exclude:</span></span><br><span class="line"><span class="attr">    - filtertype:</span> <span class="string">age</span></span><br><span class="line"><span class="attr">      source:</span> <span class="string">name</span></span><br><span class="line"><span class="attr">      direction:</span> <span class="string">older</span></span><br><span class="line"><span class="attr">      timestring:</span> <span class="string">'%Y.%m.%d'</span></span><br><span class="line"><span class="attr">      unit:</span> <span class="string">days</span></span><br><span class="line"><span class="attr">      unit_count:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">      exclude:</span></span><br></pre></td></tr></table></figure></li><li><p>现在可以使用 <code>--dry-run</code> 参数试运行测试一下（这个参数的作用就是不会真正的去执行，只是模拟）。<code>--config ~/.curator/curator.yml</code> 可省略</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curator --config ~/.curator/curator.yml --dry-run ~/delete_indecies.yml</span><br></pre></td></tr></table></figure></li></ol><h3 id="配置定时任务"><a href="#配置定时任务" class="headerlink" title="配置定时任务"></a>配置定时任务</h3><p>先说一下用法，后面再列几篇文章供参考</p><ol><li>执行 <code>crontab -e</code>，会自动打开 <code>vim</code> 编辑器</li><li>我这里是每隔6个小时执行一次，因此添加一行 <code>0 0,6,12,18 * * * /usr/local/bin/curator ~/delete_indecies.yml</code></li><li>保存后大功告成</li></ol><h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul><li><span class="exturl" data-url="aHR0cHM6Ly93d3cuZWxhc3RpYy5jby9ndWlkZS9lbi9lbGFzdGljc2VhcmNoL2NsaWVudC9jdXJhdG9yL2N1cnJlbnQvaW5kZXguaHRtbA==" title="https://www.elastic.co/guide/en/elasticsearch/client/curator/current/index.html">Curator 文档<i class="fa fa-external-link"></i></span></li><li><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTE5ODQwNi9hcnRpY2xlL2RldGFpbHMvNzkwNzU1MDI=" title="https://blog.csdn.net/weixin_39198406/article/details/79075502">crontab 参数解释<i class="fa fa-external-link"></i></span></li><li><span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vbWluZ2ZvcnlvdS9wLzM5MzA2MzYuaHRtbA==" title="https://www.cnblogs.com/mingforyou/p/3930636.html">Linux 定时任务<i class="fa fa-external-link"></i></span></li></ul></div><div><div style="text-align:center;color:#ccc;font-size:14px">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong> 雾都迷城</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="https://www.wdmcheng.cn/Curator-管理你的Elasticsearch索引/" title="Curator-管理你的Elasticsearch索引">https://www.wdmcheng.cn/Curator-管理你的Elasticsearch索引/</a></li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用<span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</span> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"> <a href="/tags/elastic/" rel="tag"># elastic</a> <a href="/tags/elasticsearch/" rel="tag"># elasticsearch</a> <a href="/tags/es/" rel="tag"># es</a> <a href="/tags/curator/" rel="tag"># curator</a> <a href="/tags/python/" rel="tag"># python</a> <a href="/tags/python3/" rel="tag"># python3</a> <a href="/tags/pip/" rel="tag"># pip</a> <a href="/tags/crontab/" rel="tag"># crontab</a></div><div class="post-widgets"><div class="social_share"><div id="needsharebutton-postbottom"><span class="btn"><i class="fa fa-share-alt" aria-hidden="true"></i></span></div></div></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/macOS文件系统区分大小写的环境配置/" rel="next" title="macOS文件系统区分大小写的环境配置"><i class="fa fa-chevron-left"></i> macOS文件系统区分大小写的环境配置</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"></div></div></footer></div></article></div></div><div class="comments" id="comments"><div id="lv-container" data-id="city" data-uid="MTAyMC80MzQ0Ni8xOTk4Ng=="></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview-wrap"> 站点概览</li></ul><div class="site-overview-wrap sidebar-panel"><div class="site-overview"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"><p class="site-author-name" itemprop="name">雾都迷城</p><div class="site-description motion-element" itemprop="description">手握日月摘星晨，世间无我这般人……嗯……吹大了</div></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives/"><span class="site-state-item-count">4</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/"><span class="site-state-item-count">16</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="feed-link motion-element"><a href="/atom.xml" rel="alternate"><i class="fa fa-rss"></i> RSS</a></div><div class="cc-license motion-element" itemprop="license"> <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></span></div></div></div><div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">1.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">1.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置定时任务"><span class="nav-number">1.3.</span> <span class="nav-text">配置定时任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">1.4.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div></div></div><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span id="scrollpercent"><span>0</span>%</span></div></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright"> <span class="exturl" data-url="aHR0cDovL3d3dy5iZWlhbi5taWl0Lmdvdi5jbg==">京ICP备202100XXXX号</span> &copy; <span itemprop="copyrightYear">2022</span><span class="with-love" id="animate"><i class="fa fa-heart"></i></span> <span class="author" itemprop="copyrightHolder">雾都迷城</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-area-chart"></i></span> <span title="站点总字数">13k</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-coffee"></i></span> <span title="站点阅读时长">12 分钟</span></div><div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v3.8.0</div> <span class="post-meta-divider">|</span><div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Gemini</span> v7.1.1</div><div class="busuanzi-count"><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="post-meta-item-icon"><i class="fa fa-users"></i></span><span class="site-uv" title="总访客量"><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span><span class="site-pv" title="总访问量"><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div id="needsharebutton-float"><span class="btn"><i class="fa fa-share-alt" aria-hidden="true"></i></span></div></div><script>"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script color="0,0,255" opacity="0.5" zindex="-1" count="99" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1/canvas-nest.min.js"></script><script src="//cdn.jsdelivr.net/npm/jquery@2/dist/jquery.min.js"></script><script src="//cdn.jsdelivr.net/npm/fastclick@1/lib/fastclick.min.js"></script><script src="//cdn.jsdelivr.net/npm/jquery_lazyload@1/jquery.lazyload.min.js"></script><script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script><script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script><script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script><script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-reading-progress@1/reading_progress.min.js"></script><script src="/js/utils.js?v=7.1.1"></script><script src="/js/motion.js?v=7.1.1"></script><script src="/js/affix.js?v=7.1.1"></script><script src="/js/schemes/pisces.js?v=7.1.1"></script><script src="/js/scrollspy.js?v=7.1.1"></script><script src="/js/post-details.js?v=7.1.1"></script><script src="/js/next-boot.js?v=7.1.1"></script><script src="/js/js.cookie.js?v=7.1.1"></script><script src="/js/scroll-cookie.js?v=7.1.1"></script><script src="/js/exturl.js?v=7.1.1"></script><script>window.livereOptions={refer:"Curator-管理你的Elasticsearch索引/"},function(e,t){var r,n=e.getElementsByTagName(t)[0];"function"!=typeof LivereTower&&((r=e.createElement(t)).src="https://cdn-city.livere.com/js/embed.dist.js",r.async=!0,n.parentNode.insertBefore(r,n))}(document,"script")</script><script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script><script>
+    
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({ time: { '__op': 'Increment', 'amount': 1 } }))
+            
+              .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .fail(function ({ responseJSON }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'KxkFsrspt4Gy1MFUvOcKVbVX-gzGzoHsz')
+        .done(function({ api_server }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'KxkFsrspt4Gy1MFUvOcKVbVX-gzGzoHsz',
+                'X-LC-Key': 'swUGG11MQeG4KxVJ7ycdsmxr',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+          
+            addCount(Counter);
+          
+        });
+    });
+  </script><script>$("body").find("div.pdf").length&&$.ajax({type:"GET",url:"//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js",dataType:"script",cache:!0,success:function(){$("body").find("div.pdf").each(function(e,t){PDFObject.embed($(t).attr("target"),$(t),{pdfOpenParams:{navpanes:0,toolbar:0,statusbar:0,pagemode:"thumbs",view:"FitH"},PDFJS_URL:"/lib/pdf/web/viewer.html",height:$(t).attr("height")||"500px"})})}})</script><script>$("body").find("pre.mermaid").length&&$.ajax({type:"GET",url:"//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js",dataType:"script",cache:!0,success:function(){mermaid.initialize({theme:"forest",logLevel:3,flowchart:{curve:"linear"},gantt:{axisFormat:"%m/%d/%Y"},sequence:{actorMargin:50}})}})</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script><script>pbOptions={iconStyle:"box",boxForm:"horizontal",position:"bottomCenter",networks:"Weibo,Wechat,Douban,QQZone,Twitter,Facebook,Linkedin,Mailto,Evernote"},new needShareButton("#needsharebutton-postbottom",pbOptions),flOptions={iconStyle:"box",boxForm:"horizontal",position:"middleRight",networks:"Weibo,Wechat,Douban,QQZone,Twitter,Facebook,Linkedin,Mailto,Evernote"},new needShareButton("#needsharebutton-float",flOptions)</script><script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script><script>pangu.spacingPage()</script><script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-bookmark@1/bookmark.min.js"></script><script>bookmark.scrollToMark("auto","#更多")</script><script>$(".highlight").not(".gist .highlight").each(function(t,e){var n=$("<div>").addClass("highlight-wrap");$(e).after(n),n.append($("<button>").addClass("copy-btn").append("复制").on("click",function(t){var e=$(this).parent().find(".code").find(".line").map(function(t,e){return $(e).text()}).toArray().join("\n"),n=document.createElement("textarea"),o=window.pageYOffset||document.documentElement.scrollTop;n.style.top=o+"px",n.style.position="absolute",n.style.opacity="0",n.readOnly=!0,n.value=e,document.body.appendChild(n),n.select(),n.setSelectionRange(0,e.length),n.readOnly=!1,document.execCommand("copy")?$(this).text("复制成功"):$(this).text("复制失败"),n.blur(),$(this).blur()})).on("mouseleave",function(t){var e=$(this).find(".copy-btn");setTimeout(function(){e.text("复制")},300)}).append(e)})</script><script src="https://cdn.jsdelivr.net/npm/live2d-widget@3.x/lib/L2Dwidget.min.js"></script><script>L2Dwidget.init({tagMode:!1,debug:!1,model:{jsonPath:"https://cdn.jsdelivr.net/npm/live2d-widget-model-haruto@1.x/assets/haruto.model.json"},display:{position:"right",width:300,height:600},mobile:{show:!1},log:!1,pluginJsPath:"lib/",pluginModelPath:"assets/",pluginRootPath:"live2dw/"})</script></body></html>

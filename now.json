@@ -1,0 +1,12 @@
+{
+  "name": "wdmcheng",
+  "version": 2,
+  "public": false,
+  "alias": ["wdmcheng", "wudumicheng", "wdmc"],
+  "github": {
+    "enabled": true,
+    "autoAlias": true
+  },
+  "scope": "wdmcheng",
+  "regions": ["hnd1", "icn1", "bru1", "lhr1", "iad1", "sfo1"]
+}
